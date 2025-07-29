@@ -1,0 +1,16 @@
+class CreateMobbiePaywallFeatures < ActiveRecord::Migration[<%= Rails::VERSION::MAJOR %>.<%= Rails::VERSION::MINOR %>]
+  def change
+    create_table :mobbie_paywall_features do |t|
+      t.string :title, null: false
+      t.string :icon, null: false
+      t.text :description, null: false
+      t.integer :display_order, default: 0, null: false
+      t.boolean :is_visible, default: true, null: false
+      
+      t.timestamps
+      
+      t.index :display_order
+      t.index :is_visible
+    end
+  end
+end

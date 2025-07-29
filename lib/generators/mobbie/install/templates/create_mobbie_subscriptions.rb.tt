@@ -1,0 +1,26 @@
+class CreateMobbieSubscriptions < ActiveRecord::Migration[<%= Rails::VERSION::MAJOR %>.<%= Rails::VERSION::MINOR %>]
+  def change
+    create_table :mobbie_subscriptions do |t|
+      t.references :user, null: false, foreign_key: { to_table: :mobbie_users }
+      t.references :subscription_plan, foreign_key: { to_table: :mobbie_subscription_plans }
+      t.string :original_transaction_id, null: false, index: { unique: true }
+      t.string :transaction_id, null: false
+      t.string :product_id, null: false
+      t.datetime :purchase_date, null: false
+      t.datetime :expires_at, null: false
+      t.string :platform, null: false
+      t.string :status, null: false
+      t.string :tier, null: false
+      t.string :webhook_notification_type
+      t.datetime :webhook_notification_date
+
+      t.timestamps
+    end
+
+    add_index :mobbie_subscriptions, :product_id
+    add_index :mobbie_subscriptions, :expires_at
+    add_index :mobbie_subscriptions, :status
+    add_index :mobbie_subscriptions, :tier
+    add_index :mobbie_subscriptions, [:user_id, :status]
+  end
+end

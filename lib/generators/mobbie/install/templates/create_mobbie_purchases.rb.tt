@@ -1,0 +1,19 @@
+class CreateMobbiePurchases < ActiveRecord::Migration[<%= Rails::VERSION::MAJOR %>.<%= Rails::VERSION::MINOR %>]
+  def change
+    create_table :mobbie_purchases do |t|
+      t.references :user, null: false, foreign_key: { to_table: :mobbie_users }
+      t.string :original_transaction_id, null: false, index: { unique: true }
+      t.string :transaction_id, null: false
+      t.string :product_id, null: false
+      t.integer :credits_granted, null: false
+      t.datetime :purchase_date, null: false
+      t.string :platform, null: false
+
+      t.timestamps
+    end
+
+    add_index :mobbie_purchases, :product_id
+    add_index :mobbie_purchases, :platform
+    add_index :mobbie_purchases, :purchase_date
+  end
+end

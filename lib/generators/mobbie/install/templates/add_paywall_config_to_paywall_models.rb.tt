@@ -1,0 +1,10 @@
+class AddPaywallConfigToPaywallModels < ActiveRecord::Migration[<%= Rails::VERSION::MAJOR %>.<%= Rails::VERSION::MINOR %>]
+  def change
+    add_reference :mobbie_paywall_offerings, :paywall_config, foreign_key: { to_table: :mobbie_paywall_configs }
+    add_reference :mobbie_paywall_features, :paywall_config, foreign_key: { to_table: :mobbie_paywall_configs }
+    
+    # Update the unique index on product_id to include paywall_config_id
+    remove_index :mobbie_paywall_offerings, :product_id
+    add_index :mobbie_paywall_offerings, [:product_id, :paywall_config_id], unique: true, name: 'index_mobbie_offerings_on_product_and_config'
+  end
+end

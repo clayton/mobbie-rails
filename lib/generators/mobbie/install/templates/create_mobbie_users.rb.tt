@@ -1,0 +1,21 @@
+class CreateMobbieUsers < ActiveRecord::Migration[<%= Rails::VERSION::MAJOR %>.<%= Rails::VERSION::MINOR %>]
+  def change
+    create_table :mobbie_users do |t|
+      t.string :email
+      t.string :username, null: false
+      t.string :device_id
+      t.boolean :is_anonymous, default: true, null: false
+      t.string :oauth_provider
+      t.string :oauth_uid
+      t.string :name
+      
+      t.timestamps
+      
+      t.index :device_id, unique: true
+      t.index :email, unique: true, where: "email IS NOT NULL"
+      t.index :username, unique: true
+      t.index [:oauth_provider, :oauth_uid], unique: true, where: "oauth_provider IS NOT NULL"
+      t.index :is_anonymous
+    end
+  end
+end

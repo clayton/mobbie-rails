@@ -1,0 +1,22 @@
+class CreateMobbiePaywallOfferings < ActiveRecord::Migration[<%= Rails::VERSION::MAJOR %>.<%= Rails::VERSION::MINOR %>]
+  def change
+    create_table :mobbie_paywall_offerings do |t|
+      t.string :product_id, null: false
+      t.string :display_name, null: false
+      t.text :description
+      t.integer :cartoon_count
+      t.boolean :is_welcome_offer, default: false, null: false
+      t.boolean :is_featured, default: false, null: false
+      t.integer :display_order, default: 0, null: false
+      t.string :badge_text
+      t.boolean :is_visible, default: true, null: false
+      t.boolean :is_visible_for_onboarding, default: true, null: false
+      
+      t.timestamps
+      
+      t.index :product_id, unique: true
+      t.index :display_order
+      t.index :is_visible
+    end
+  end
+end

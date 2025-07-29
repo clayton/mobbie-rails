@@ -1,0 +1,23 @@
+class CreateMobbieSubscriptionPlans < ActiveRecord::Migration[<%= Rails::VERSION::MAJOR %>.<%= Rails::VERSION::MINOR %>]
+  def change
+    create_table :mobbie_subscription_plans do |t|
+      t.string :product_id, null: false, index: { unique: true }
+      t.string :name, null: false
+      t.text :description
+      t.string :tier, null: false
+      t.string :billing_period, null: false
+      t.integer :price_cents, default: 0
+      t.string :currency, default: 'USD'
+      t.jsonb :features, default: {}
+      t.integer :display_order, default: 0
+      t.boolean :active, default: true
+
+      t.timestamps
+    end
+
+    add_index :mobbie_subscription_plans, :tier
+    add_index :mobbie_subscription_plans, :billing_period
+    add_index :mobbie_subscription_plans, :active
+    add_index :mobbie_subscription_plans, [:tier, :billing_period]
+  end
+end

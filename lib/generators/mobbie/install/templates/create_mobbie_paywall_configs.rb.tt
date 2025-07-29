@@ -1,0 +1,19 @@
+class CreateMobbiePaywallConfigs < ActiveRecord::Migration[<%= Rails::VERSION::MAJOR %>.<%= Rails::VERSION::MINOR %>]
+  def change
+    create_table :mobbie_paywall_configs do |t|
+      t.string :title, null: false
+      t.string :subtitle, null: false
+      t.string :welcome_title, null: false
+      t.string :welcome_subtitle, null: false
+      t.boolean :show_skip_button, default: true
+      t.string :skip_button_text, null: false, default: 'Skip'
+      t.boolean :active, default: false
+      t.integer :display_order, default: 0
+
+      t.timestamps
+    end
+
+    add_index :mobbie_paywall_configs, :active
+    add_index :mobbie_paywall_configs, :display_order
+  end
+end

@@ -1,0 +1,6 @@
+class AddCreditBalanceToMobbieUsers < ActiveRecord::Migration[<%= Rails::VERSION::MAJOR %>.<%= Rails::VERSION::MINOR %>]
+  def change
+    add_column :mobbie_users, :credit_balance, :integer, default: 0, null: false
+    add_index :mobbie_users, :credit_balance
+  end
+end
