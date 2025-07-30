@@ -4,6 +4,7 @@ module Mobbie
     
     included do
       before_action :set_default_headers
+      before_action :authenticate_user!
     end
     
     private

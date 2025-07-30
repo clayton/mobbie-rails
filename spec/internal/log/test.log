@@ -1156,3 +1156,403 @@ ActionController::RoutingError (No route matches [POST] "/api/auth/anonymous"):
   
   [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
   [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[35m (2.3ms)[0m  [1m[35mDROP TABLE IF EXISTS "mobbie_users"[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE TABLE "mobbie_users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "device_id" varchar, "email" varchar, "username" varchar, "is_anonymous" boolean DEFAULT 1, "oauth_provider" varchar, "oauth_uid" varchar, "name" varchar, "credit_balance" integer DEFAULT 0 NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_mobbie_users_on_device_id" ON "mobbie_users" ("device_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_users_on_email" ON "mobbie_users" ("email")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_users_on_oauth" ON "mobbie_users" ("oauth_uid", "oauth_provider")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "mobbie_support_tickets"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "mobbie_support_tickets" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" bigint NOT NULL, "subject" varchar NOT NULL, "message" text NOT NULL, "category" varchar DEFAULT 'general', "status" varchar DEFAULT 'open', "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_support_tickets_on_user_id" ON "mobbie_support_tickets" ("user_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_support_tickets_on_status" ON "mobbie_support_tickets" ("status")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "mobbie_paywall_configs"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "mobbie_paywall_configs" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar NOT NULL, "subtitle" varchar NOT NULL, "welcome_title" varchar NOT NULL, "welcome_subtitle" varchar NOT NULL, "show_skip_button" boolean DEFAULT 1, "skip_button_text" varchar DEFAULT 'Skip' NOT NULL, "active" boolean DEFAULT 0, "display_order" integer DEFAULT 0, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_mobbie_paywall_configs_on_active" ON "mobbie_paywall_configs" ("active")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_paywall_configs_on_display_order" ON "mobbie_paywall_configs" ("display_order")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "mobbie_paywall_offerings"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "mobbie_paywall_offerings" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "product_id" varchar NOT NULL, "display_name" varchar NOT NULL, "description" text, "cartoon_count" integer, "is_welcome_offer" boolean DEFAULT 0, "is_featured" boolean DEFAULT 0, "display_order" integer DEFAULT 0, "badge_text" varchar, "is_visible" boolean DEFAULT 1, "is_visible_for_onboarding" boolean DEFAULT 1, "paywall_config_id" bigint, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_mobbie_offerings_on_product_and_config" ON "mobbie_paywall_offerings" ("product_id", "paywall_config_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_paywall_offerings_on_display_order" ON "mobbie_paywall_offerings" ("display_order")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "mobbie_paywall_features"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "mobbie_paywall_features" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar NOT NULL, "icon" varchar NOT NULL, "description" text NOT NULL, "display_order" integer DEFAULT 0, "is_visible" boolean DEFAULT 1, "paywall_config_id" bigint, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_paywall_features_on_display_order" ON "mobbie_paywall_features" ("display_order")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "mobbie_paywall_display_settings"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "mobbie_paywall_display_settings" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar, "subtitle" varchar, "welcome_title" varchar, "welcome_subtitle" varchar, "show_skip_button" boolean DEFAULT 1, "skip_button_text" varchar DEFAULT 'Skip', "is_active" boolean DEFAULT 0, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "mobbie_subscription_plans"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "mobbie_subscription_plans" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "product_id" varchar NOT NULL, "name" varchar NOT NULL, "description" text, "tier" varchar NOT NULL, "billing_period" varchar NOT NULL, "price_cents" integer DEFAULT 0, "currency" varchar DEFAULT 'USD', "features" json DEFAULT '{}', "display_order" integer DEFAULT 0, "active" boolean DEFAULT 1, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_mobbie_subscription_plans_on_product_id" ON "mobbie_subscription_plans" ("product_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_mobbie_subscription_plans_on_tier" ON "mobbie_subscription_plans" ("tier")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_subscription_plans_on_billing_period" ON "mobbie_subscription_plans" ("billing_period")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_subscription_plans_on_active" ON "mobbie_subscription_plans" ("active")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "mobbie_subscriptions"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "mobbie_subscriptions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" bigint NOT NULL, "subscription_plan_id" bigint, "original_transaction_id" varchar NOT NULL, "transaction_id" varchar NOT NULL, "product_id" varchar NOT NULL, "purchase_date" datetime(6) NOT NULL, "expires_at" datetime(6) NOT NULL, "platform" varchar NOT NULL, "status" varchar NOT NULL, "tier" varchar NOT NULL, "webhook_notification_type" varchar, "webhook_notification_date" datetime(6), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_mobbie_subscriptions_on_original_transaction_id" ON "mobbie_subscriptions" ("original_transaction_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_subscriptions_on_product_id" ON "mobbie_subscriptions" ("product_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_subscriptions_on_expires_at" ON "mobbie_subscriptions" ("expires_at")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_subscriptions_on_status" ON "mobbie_subscriptions" ("status")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_subscriptions_on_tier" ON "mobbie_subscriptions" ("tier")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_subscriptions_on_user_id_and_status" ON "mobbie_subscriptions" ("user_id", "status")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "mobbie_purchases"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE TABLE "mobbie_purchases" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" bigint NOT NULL, "original_transaction_id" varchar NOT NULL, "transaction_id" varchar NOT NULL, "product_id" varchar NOT NULL, "credits_granted" integer NOT NULL, "purchase_date" datetime(6) NOT NULL, "platform" varchar NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_mobbie_purchases_on_original_transaction_id" ON "mobbie_purchases" ("original_transaction_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_purchases_on_product_id" ON "mobbie_purchases" ("product_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_purchases_on_platform" ON "mobbie_purchases" ("platform")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_purchases_on_purchase_date" ON "mobbie_purchases" ("purchase_date")[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "amobbie_support_tickets" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" bigint NOT NULL, "subject" varchar NOT NULL, "message" text NOT NULL, "category" varchar DEFAULT 'general', "status" varchar DEFAULT 'open', "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_amobbie_support_tickets_on_status" ON "amobbie_support_tickets" ("status")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_amobbie_support_tickets_on_user_id" ON "amobbie_support_tickets" ("user_id")[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "amobbie_support_tickets" ("id","user_id","subject","message","category","status","created_at","updated_at")
+                     SELECT "id","user_id","subject","message","category","status","created_at","updated_at" FROM "mobbie_support_tickets"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "mobbie_support_tickets"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "mobbie_support_tickets" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" bigint NOT NULL, "subject" varchar NOT NULL, "message" text NOT NULL, "category" varchar DEFAULT 'general', "status" varchar DEFAULT 'open', "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_2d4d322808"
+FOREIGN KEY ("user_id")
+  REFERENCES "mobbie_users" ("id")
+)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_support_tickets_on_user_id" ON "mobbie_support_tickets" ("user_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_support_tickets_on_status" ON "mobbie_support_tickets" ("status")[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "mobbie_support_tickets" ("id","user_id","subject","message","category","status","created_at","updated_at")
+                     SELECT "id","user_id","subject","message","category","status","created_at","updated_at" FROM "amobbie_support_tickets"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "amobbie_support_tickets"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "amobbie_paywall_offerings" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "product_id" varchar NOT NULL, "display_name" varchar NOT NULL, "description" text, "cartoon_count" integer, "is_welcome_offer" boolean DEFAULT 0, "is_featured" boolean DEFAULT 0, "display_order" integer DEFAULT 0, "badge_text" varchar, "is_visible" boolean DEFAULT 1, "is_visible_for_onboarding" boolean DEFAULT 1, "paywall_config_id" bigint, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_amobbie_paywall_offerings_on_display_order" ON "amobbie_paywall_offerings" ("display_order")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE UNIQUE INDEX "tindex_mobbie_offerings_on_product_and_config" ON "amobbie_paywall_offerings" ("product_id", "paywall_config_id")[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "amobbie_paywall_offerings" ("id","product_id","display_name","description","cartoon_count","is_welcome_offer","is_featured","display_order","badge_text","is_visible","is_visible_for_onboarding","paywall_config_id","created_at","updated_at")
+                     SELECT "id","product_id","display_name","description","cartoon_count","is_welcome_offer","is_featured","display_order","badge_text","is_visible","is_visible_for_onboarding","paywall_config_id","created_at","updated_at" FROM "mobbie_paywall_offerings"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "mobbie_paywall_offerings"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "mobbie_paywall_offerings" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "product_id" varchar NOT NULL, "display_name" varchar NOT NULL, "description" text, "cartoon_count" integer, "is_welcome_offer" boolean DEFAULT 0, "is_featured" boolean DEFAULT 0, "display_order" integer DEFAULT 0, "badge_text" varchar, "is_visible" boolean DEFAULT 1, "is_visible_for_onboarding" boolean DEFAULT 1, "paywall_config_id" bigint, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_da4b8fb5ab"
+FOREIGN KEY ("paywall_config_id")
+  REFERENCES "mobbie_paywall_configs" ("id")
+)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_mobbie_offerings_on_product_and_config" ON "mobbie_paywall_offerings" ("product_id", "paywall_config_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_paywall_offerings_on_display_order" ON "mobbie_paywall_offerings" ("display_order")[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "mobbie_paywall_offerings" ("id","product_id","display_name","description","cartoon_count","is_welcome_offer","is_featured","display_order","badge_text","is_visible","is_visible_for_onboarding","paywall_config_id","created_at","updated_at")
+                     SELECT "id","product_id","display_name","description","cartoon_count","is_welcome_offer","is_featured","display_order","badge_text","is_visible","is_visible_for_onboarding","paywall_config_id","created_at","updated_at" FROM "amobbie_paywall_offerings"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE "amobbie_paywall_offerings"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE TEMPORARY TABLE "amobbie_paywall_features" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar NOT NULL, "icon" varchar NOT NULL, "description" text NOT NULL, "display_order" integer DEFAULT 0, "is_visible" boolean DEFAULT 1, "paywall_config_id" bigint, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_amobbie_paywall_features_on_display_order" ON "amobbie_paywall_features" ("display_order")[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "amobbie_paywall_features" ("id","title","icon","description","display_order","is_visible","paywall_config_id","created_at","updated_at")
+                     SELECT "id","title","icon","description","display_order","is_visible","paywall_config_id","created_at","updated_at" FROM "mobbie_paywall_features"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE "mobbie_paywall_features"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "mobbie_paywall_features" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar NOT NULL, "icon" varchar NOT NULL, "description" text NOT NULL, "display_order" integer DEFAULT 0, "is_visible" boolean DEFAULT 1, "paywall_config_id" bigint, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_9bab9a3f0b"
+FOREIGN KEY ("paywall_config_id")
+  REFERENCES "mobbie_paywall_configs" ("id")
+)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_paywall_features_on_display_order" ON "mobbie_paywall_features" ("display_order")[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "mobbie_paywall_features" ("id","title","icon","description","display_order","is_visible","paywall_config_id","created_at","updated_at")
+                     SELECT "id","title","icon","description","display_order","is_visible","paywall_config_id","created_at","updated_at" FROM "amobbie_paywall_features"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE "amobbie_paywall_features"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "amobbie_subscriptions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" bigint NOT NULL, "subscription_plan_id" bigint, "original_transaction_id" varchar NOT NULL, "transaction_id" varchar NOT NULL, "product_id" varchar NOT NULL, "purchase_date" datetime(6) NOT NULL, "expires_at" datetime(6) NOT NULL, "platform" varchar NOT NULL, "status" varchar NOT NULL, "tier" varchar NOT NULL, "webhook_notification_type" varchar, "webhook_notification_date" datetime(6), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_amobbie_subscriptions_on_user_id_and_status" ON "amobbie_subscriptions" ("user_id", "status")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_amobbie_subscriptions_on_tier" ON "amobbie_subscriptions" ("tier")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_amobbie_subscriptions_on_status" ON "amobbie_subscriptions" ("status")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_amobbie_subscriptions_on_expires_at" ON "amobbie_subscriptions" ("expires_at")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_amobbie_subscriptions_on_product_id" ON "amobbie_subscriptions" ("product_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE UNIQUE INDEX "tindex_amobbie_subscriptions_on_original_transaction_id" ON "amobbie_subscriptions" ("original_transaction_id")[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "amobbie_subscriptions" ("id","user_id","subscription_plan_id","original_transaction_id","transaction_id","product_id","purchase_date","expires_at","platform","status","tier","webhook_notification_type","webhook_notification_date","created_at","updated_at")
+                     SELECT "id","user_id","subscription_plan_id","original_transaction_id","transaction_id","product_id","purchase_date","expires_at","platform","status","tier","webhook_notification_type","webhook_notification_date","created_at","updated_at" FROM "mobbie_subscriptions"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "mobbie_subscriptions"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "mobbie_subscriptions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" bigint NOT NULL, "subscription_plan_id" bigint, "original_transaction_id" varchar NOT NULL, "transaction_id" varchar NOT NULL, "product_id" varchar NOT NULL, "purchase_date" datetime(6) NOT NULL, "expires_at" datetime(6) NOT NULL, "platform" varchar NOT NULL, "status" varchar NOT NULL, "tier" varchar NOT NULL, "webhook_notification_type" varchar, "webhook_notification_date" datetime(6), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_dfdfa2f87e"
+FOREIGN KEY ("user_id")
+  REFERENCES "mobbie_users" ("id")
+)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_mobbie_subscriptions_on_original_transaction_id" ON "mobbie_subscriptions" ("original_transaction_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_subscriptions_on_product_id" ON "mobbie_subscriptions" ("product_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_subscriptions_on_expires_at" ON "mobbie_subscriptions" ("expires_at")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_subscriptions_on_status" ON "mobbie_subscriptions" ("status")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_subscriptions_on_tier" ON "mobbie_subscriptions" ("tier")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_subscriptions_on_user_id_and_status" ON "mobbie_subscriptions" ("user_id", "status")[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "mobbie_subscriptions" ("id","user_id","subscription_plan_id","original_transaction_id","transaction_id","product_id","purchase_date","expires_at","platform","status","tier","webhook_notification_type","webhook_notification_date","created_at","updated_at")
+                     SELECT "id","user_id","subscription_plan_id","original_transaction_id","transaction_id","product_id","purchase_date","expires_at","platform","status","tier","webhook_notification_type","webhook_notification_date","created_at","updated_at" FROM "amobbie_subscriptions"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "amobbie_subscriptions"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "amobbie_subscriptions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" bigint NOT NULL, "subscription_plan_id" bigint, "original_transaction_id" varchar NOT NULL, "transaction_id" varchar NOT NULL, "product_id" varchar NOT NULL, "purchase_date" datetime(6) NOT NULL, "expires_at" datetime(6) NOT NULL, "platform" varchar NOT NULL, "status" varchar NOT NULL, "tier" varchar NOT NULL, "webhook_notification_type" varchar, "webhook_notification_date" datetime(6), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_amobbie_subscriptions_on_user_id_and_status" ON "amobbie_subscriptions" ("user_id", "status")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_amobbie_subscriptions_on_tier" ON "amobbie_subscriptions" ("tier")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_amobbie_subscriptions_on_status" ON "amobbie_subscriptions" ("status")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_amobbie_subscriptions_on_expires_at" ON "amobbie_subscriptions" ("expires_at")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_amobbie_subscriptions_on_product_id" ON "amobbie_subscriptions" ("product_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE UNIQUE INDEX "tindex_amobbie_subscriptions_on_original_transaction_id" ON "amobbie_subscriptions" ("original_transaction_id")[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "amobbie_subscriptions" ("id","user_id","subscription_plan_id","original_transaction_id","transaction_id","product_id","purchase_date","expires_at","platform","status","tier","webhook_notification_type","webhook_notification_date","created_at","updated_at")
+                     SELECT "id","user_id","subscription_plan_id","original_transaction_id","transaction_id","product_id","purchase_date","expires_at","platform","status","tier","webhook_notification_type","webhook_notification_date","created_at","updated_at" FROM "mobbie_subscriptions"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "mobbie_subscriptions"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "mobbie_subscriptions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" bigint NOT NULL, "subscription_plan_id" bigint, "original_transaction_id" varchar NOT NULL, "transaction_id" varchar NOT NULL, "product_id" varchar NOT NULL, "purchase_date" datetime(6) NOT NULL, "expires_at" datetime(6) NOT NULL, "platform" varchar NOT NULL, "status" varchar NOT NULL, "tier" varchar NOT NULL, "webhook_notification_type" varchar, "webhook_notification_date" datetime(6), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_dfdfa2f87e"
+FOREIGN KEY ("user_id")
+  REFERENCES "mobbie_users" ("id")
+, CONSTRAINT "fk_rails_faebaa1bf2"
+FOREIGN KEY ("subscription_plan_id")
+  REFERENCES "mobbie_subscription_plans" ("id")
+)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_mobbie_subscriptions_on_original_transaction_id" ON "mobbie_subscriptions" ("original_transaction_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_subscriptions_on_product_id" ON "mobbie_subscriptions" ("product_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_subscriptions_on_expires_at" ON "mobbie_subscriptions" ("expires_at")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_mobbie_subscriptions_on_status" ON "mobbie_subscriptions" ("status")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_mobbie_subscriptions_on_tier" ON "mobbie_subscriptions" ("tier")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_subscriptions_on_user_id_and_status" ON "mobbie_subscriptions" ("user_id", "status")[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "mobbie_subscriptions" ("id","user_id","subscription_plan_id","original_transaction_id","transaction_id","product_id","purchase_date","expires_at","platform","status","tier","webhook_notification_type","webhook_notification_date","created_at","updated_at")
+                     SELECT "id","user_id","subscription_plan_id","original_transaction_id","transaction_id","product_id","purchase_date","expires_at","platform","status","tier","webhook_notification_type","webhook_notification_date","created_at","updated_at" FROM "amobbie_subscriptions"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "amobbie_subscriptions"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "amobbie_purchases" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" bigint NOT NULL, "original_transaction_id" varchar NOT NULL, "transaction_id" varchar NOT NULL, "product_id" varchar NOT NULL, "credits_granted" integer NOT NULL, "purchase_date" datetime(6) NOT NULL, "platform" varchar NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_amobbie_purchases_on_purchase_date" ON "amobbie_purchases" ("purchase_date")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_amobbie_purchases_on_platform" ON "amobbie_purchases" ("platform")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "tindex_amobbie_purchases_on_product_id" ON "amobbie_purchases" ("product_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE UNIQUE INDEX "tindex_amobbie_purchases_on_original_transaction_id" ON "amobbie_purchases" ("original_transaction_id")[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "amobbie_purchases" ("id","user_id","original_transaction_id","transaction_id","product_id","credits_granted","purchase_date","platform","created_at","updated_at")
+                     SELECT "id","user_id","original_transaction_id","transaction_id","product_id","credits_granted","purchase_date","platform","created_at","updated_at" FROM "mobbie_purchases"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "mobbie_purchases"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "mobbie_purchases" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" bigint NOT NULL, "original_transaction_id" varchar NOT NULL, "transaction_id" varchar NOT NULL, "product_id" varchar NOT NULL, "credits_granted" integer NOT NULL, "purchase_date" datetime(6) NOT NULL, "platform" varchar NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_fc3c7059be"
+FOREIGN KEY ("user_id")
+  REFERENCES "mobbie_users" ("id")
+)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_mobbie_purchases_on_original_transaction_id" ON "mobbie_purchases" ("original_transaction_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_purchases_on_product_id" ON "mobbie_purchases" ("product_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_purchases_on_platform" ON "mobbie_purchases" ("platform")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_mobbie_purchases_on_purchase_date" ON "mobbie_purchases" ("purchase_date")[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "mobbie_purchases" ("id","user_id","original_transaction_id","transaction_id","product_id","credits_granted","purchase_date","platform","created_at","updated_at")
+                     SELECT "id","user_id","original_transaction_id","transaction_id","product_id","credits_granted","purchase_date","platform","created_at","updated_at" FROM "amobbie_purchases"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "amobbie_purchases"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.0ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'test', '2025-07-30 06:18:07.831699', '2025-07-30 06:18:07.831702') RETURNING "key"[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.0ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[35mSQL (0.3ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (2.3ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (2.1ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (1.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
