@@ -8,7 +8,7 @@ class CreateMobbieSubscriptionPlans < ActiveRecord::Migration[<%= Rails::VERSION
       t.string :billing_period, null: false
       t.integer :price_cents, default: 0
       t.string :currency, default: 'USD'
-      t.jsonb :features, default: {}
+      t.json :features, default: {}
       t.integer :display_order, default: 0
       t.boolean :active, default: true
 

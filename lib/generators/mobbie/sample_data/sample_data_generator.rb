@@ -2,7 +2,7 @@ require 'rails/generators'
 
 module Mobbie
   module Generators
-    class SampleDataGenerator < Rails::Generators::Base
+    class SampleDataGenerator < ::Rails::Generators::Base
       desc "Creates sample paywall data for testing"
       
       def create_sample_data

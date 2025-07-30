@@ -3,8 +3,8 @@ require 'rails/generators/migration'
 
 module Mobbie
   module Generators
-    class InstallGenerator < Rails::Generators::Base
-      include Rails::Generators::Migration
+    class InstallGenerator < ::Rails::Generators::Base
+      include ::Rails::Generators::Migration
       
       source_root File.expand_path('templates', __dir__)
       

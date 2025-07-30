@@ -1,3 +1,5 @@
+require 'rails/engine'
+
 module Mobbie
   module Rails
     class Engine < ::Rails::Engine

@@ -7,12 +7,20 @@ module Mobbie
     validates :product_id, presence: true, uniqueness: true
     validates :name, presence: true
     validates :tier, presence: true, inclusion: { in: %w[free premium] }
-    validates :billing_period, presence: true, inclusion: { in: %w[month year] }
+    validates :billing_period, presence: true, inclusion: { in: %w[day week month year] }
     
     scope :active, -> { where(active: true) }
     scope :ordered, -> { order(:display_order, :tier, :billing_period) }
     scope :premium, -> { where(tier: 'premium') }
     scope :free, -> { where(tier: 'free') }
+    
+    def daily?
+      billing_period == 'day'
+    end
+    
+    def weekly?
+      billing_period == 'week'
+    end
     
     def monthly?
       billing_period == 'month'

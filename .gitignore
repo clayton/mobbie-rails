@@ -9,3 +9,18 @@
 
 # rspec failure tracking
 .rspec_status
+
+# Ignore test app
+/test_app/
+
+# Ignore log files
+/log/
+
+# Ignore spec internal files
+/spec/internal/log/
+/spec/internal/db/*.sqlite3
+/spec/internal/tmp/
+
+# IDE files
+.idea/
+.vscode/

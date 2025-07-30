@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "rails/version"
-require_relative "rails/engine"
+require_relative "rails/engine" if defined?(Rails::Engine)
 
 module Mobbie
   module Rails

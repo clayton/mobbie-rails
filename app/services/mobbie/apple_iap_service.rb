@@ -47,7 +47,7 @@ module Mobbie
           # Return the extracted data
           extract_transaction_data(jws_payload)
         rescue => e
-          Rails.logger.error "Failed to decode JWS token: #{e.message}"
+          ::Rails.logger.error "Failed to decode JWS token: #{e.message}" if defined?(::Rails.logger)
           raise ValidationError, "Invalid JWS token: #{e.message}"
         end
       end
@@ -55,7 +55,7 @@ module Mobbie
       def validate_production_environment?(environment)
         # For development/test, accept Xcode, Sandbox, or StoreKit Testing environments
         # For production, only accept Production environment
-        if Rails.env.production?
+        if ::Rails.env.production?
           environment == 'Production'
         else
           ['Sandbox', 'Xcode', 'StoreKit Testing'].include?(environment)
@@ -91,7 +91,7 @@ module Mobbie
         
         # If not found in production, try sandbox
         if result[:status] == 404 || result[:status] == 401
-          Rails.logger.info "Transaction not found in production, trying sandbox"
+          ::Rails.logger.info "Transaction not found in production, trying sandbox" if defined?(::Rails.logger)
           sandbox_result = call_apple_server_api(SANDBOX_API_URL, transaction_id)
           return sandbox_result if sandbox_result[:valid]
         end
@@ -122,7 +122,7 @@ module Mobbie
             { valid: false, status: response.code.to_i }
           end
         rescue => e
-          Rails.logger.error "Error calling Apple Server API: #{e.message}"
+          ::Rails.logger.error "Error calling Apple Server API: #{e.message}" if defined?(::Rails.logger)
           { valid: false, status: -1 }
         end
       end
@@ -154,7 +154,7 @@ module Mobbie
         private_key = OpenSSL::PKey.read(key_content)
         JWT.encode(payload, private_key, 'ES256', header)
       rescue => e
-        Rails.logger.error "Failed to generate App Store Connect token: #{e.message}"
+        ::Rails.logger.error "Failed to generate App Store Connect token: #{e.message}" if defined?(::Rails.logger)
         nil
       end
     end
