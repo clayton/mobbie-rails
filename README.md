@@ -43,9 +43,11 @@ This will:
 - Add an initializer for configuration
 - Mount the engine routes at `/api`
 
-### 2. Configure JWT secret
+### 2. Configure JWT secret (Optional)
 
-Add to your Rails credentials (`rails credentials:edit`):
+By default, Mobbie Rails uses your Rails application's `secret_key_base` for JWT signing.
+
+You can optionally override this by adding to your Rails credentials (`rails credentials:edit`):
 
 ```yaml
 mobbie:

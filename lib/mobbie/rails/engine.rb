@@ -14,7 +14,7 @@ module Mobbie
       
       # Configure JWT settings
       config.mobbie = ActiveSupport::OrderedOptions.new
-      config.mobbie.jwt_secret_key = ENV['MOBBIE_JWT_SECRET_KEY'] || ::Rails.application.credentials.mobbie[:jwt_secret_key] rescue nil
+      config.mobbie.jwt_secret_key = nil # Will be set in initializer
       config.mobbie.jwt_expiration = 24.hours
       config.mobbie.jwt_refresh_expiration = 30.days
       
@@ -22,6 +22,18 @@ module Mobbie
         ActiveSupport.on_load(:action_controller) do
           include Mobbie::JwtAuthenticatable
         end
+      end
+      
+      initializer "mobbie.configure_jwt_secret", after: :load_config_initializers do
+        # Set JWT secret key with proper fallback chain
+        Mobbie::Rails.jwt_secret_key ||= ENV['MOBBIE_JWT_SECRET_KEY']
+        Mobbie::Rails.jwt_secret_key ||= ::Rails.application.credentials.dig(:mobbie, :jwt_secret_key)
+        Mobbie::Rails.jwt_secret_key ||= ::Rails.application.credentials.secret_key_base
+        Mobbie::Rails.jwt_secret_key ||= ::Rails.application.secret_key_base
+        
+        # Set other configurations
+        Mobbie::Rails.jwt_expiration = config.mobbie.jwt_expiration
+        Mobbie::Rails.jwt_refresh_expiration = config.mobbie.jwt_refresh_expiration
       end
     end
   end

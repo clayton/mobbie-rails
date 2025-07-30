@@ -67,6 +67,6 @@ This is a Rails mountable engine (isolate_namespace Mobbie) that provides backen
 - WebMock for external API mocking
 
 ### Configuration
-JWT settings are configured via Rails credentials or environment variables:
-- `MOBBIE_JWT_SECRET_KEY` or `Rails.application.credentials.mobbie[:jwt_secret_key]`
+JWT settings default to using the Rails app's secret_key_base, with optional overrides:
+- Priority: `ENV['MOBBIE_JWT_SECRET_KEY']` → `credentials.mobbie[:jwt_secret_key]` → `credentials.secret_key_base` → `Rails.application.secret_key_base`
 - Configuration options in `config/initializers/mobbie.rb` (generated on install)

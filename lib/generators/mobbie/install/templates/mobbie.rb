@@ -4,7 +4,8 @@
 
 Mobbie::Rails.configure do |config|
   # JWT Configuration
-  # You can set the JWT secret key here or use Rails credentials
+  # The JWT secret key defaults to your Rails app's secret_key_base
+  # You can override it here or set via environment variable
   # config.jwt_secret_key = ENV['MOBBIE_JWT_SECRET_KEY']
   
   # Token expiration times

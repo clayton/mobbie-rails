@@ -45,19 +45,22 @@ module Mobbie
       end
       
       def add_credentials_example
-        say "\nAdd the following to your Rails credentials (rails credentials:edit):", :yellow
+        say "\nJWT Configuration:", :yellow
+        say "The gem will use your Rails app's secret_key_base by default."
+        say "You can optionally override it by adding to credentials (rails credentials:edit):", :yellow
         say <<~CREDENTIALS
           mobbie:
             jwt_secret_key: #{SecureRandom.hex(32)}
         CREDENTIALS
+        say "Or set the MOBBIE_JWT_SECRET_KEY environment variable."
       end
       
       def display_post_install_message
         say "\nMobbie Rails has been successfully installed!", :green
         say "\nNext steps:", :yellow
         say "1. Run 'rails db:migrate' to create the database tables"
-        say "2. Configure your JWT secret key in credentials or environment variables"
-        say "3. Optionally run 'rails generate mobbie:sample_data' to create sample paywall data"
+        say "2. (Optional) Configure custom JWT secret key if needed"
+        say "3. (Optional) Run 'rails generate mobbie:sample_data' to create sample paywall data"
         say "4. Configure your iOS app to point to: #{root_url}api"
       end
       

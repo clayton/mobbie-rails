@@ -60,9 +60,7 @@ module Mobbie
     end
     
     def jwt_secret_key
-      Mobbie::Rails.jwt_secret_key || Rails.application.credentials.mobbie[:jwt_secret_key]
-    rescue
-      raise Mobbie::Rails::Error, "JWT secret key not configured. Set MOBBIE_JWT_SECRET_KEY or add to credentials."
+      Mobbie::Rails.jwt_secret_key || raise(Mobbie::Rails::Error, "JWT secret key not configured")
     end
     
     def jwt_expiration
