@@ -1,4 +1,4 @@
-Mobbie::Engine.routes.draw do
+Mobbie::Rails::Engine.routes.draw do
   namespace :api do
     # Authentication routes
     post 'auth/anonymous', to: 'auth#anonymous'

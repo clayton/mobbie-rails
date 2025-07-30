@@ -47,7 +47,7 @@ RSpec.configure do |config|
   # Include route helpers after engine is loaded
   config.before(:suite) do
     Rails.application.routes.draw do
-      mount Mobbie::Engine => "/api"
+      mount Mobbie::Rails::Engine => "/api"
     end
   end
 

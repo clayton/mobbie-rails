@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-  mount Mobbie::Engine => "/api"
+  mount Mobbie::Rails::Engine => "/api"
 end

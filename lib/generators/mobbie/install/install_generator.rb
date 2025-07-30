@@ -41,7 +41,7 @@ module Mobbie
       end
       
       def mount_engine
-        route "mount Mobbie::Engine => '/api', as: 'mobbie'"
+        route "mount Mobbie::Rails::Engine => '/api', as: 'mobbie'"
       end
       
       def add_credentials_example
