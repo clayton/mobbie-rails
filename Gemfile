@@ -17,7 +17,6 @@ group :development, :test do
   gem "shoulda-matchers"
   gem "webmock"
   gem "database_cleaner-active_record"
-  gem "combustion", "~> 1.3"
   gem "sqlite3"
   gem "jwt"
   gem "timecop"

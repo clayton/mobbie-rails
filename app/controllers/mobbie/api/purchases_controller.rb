@@ -80,8 +80,12 @@ module Mobbie
       end
 
       def render_success(data)
+        # iOS expects credits_added and total_credits at root level
         render json: { 
           success: true,
+          credits_added: data[:credits_added],
+          total_credits: data[:total_credits],
+          message: "Purchase successful",
           data: data 
         }
       end

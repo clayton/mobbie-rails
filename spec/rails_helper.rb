@@ -3,14 +3,11 @@
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 
-require 'combustion'
+# Load the test Rails application
+require File.expand_path('../test_app/config/environment', __dir__)
 
-Combustion.path = 'spec/internal'
-Combustion.initialize! :active_record, :active_job, :action_controller do
-  config.active_record.migration_error = false
-end
-
-require 'mobbie/rails'
+# Prevent database truncation if the environment is production
+abort("The Rails environment is running in production mode!") if Rails.env.production?
 
 require 'rspec/rails'
 require 'factory_bot_rails'
@@ -24,6 +21,9 @@ Dir[File.join(File.dirname(__FILE__), 'support/**/*.rb')].sort.each { |f| requir
 # Load factories
 FactoryBot.definition_file_paths << File.join(File.dirname(__FILE__), 'factories')
 FactoryBot.reload
+
+# Run migrations on test database
+ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
   config.use_transactional_fixtures = true
@@ -44,25 +44,6 @@ RSpec.configure do |config|
     end
   end
 
-  # Include route helpers after engine is loaded
-  config.before(:suite) do
-    Rails.application.routes.draw do
-      mount Mobbie::Rails::Engine => "/api"
-    end
-  end
-
-  # JWT test helpers
-  config.include JwtTestHelper, type: :controller
-  config.include JwtTestHelper, type: :request
-end
-
-# Disable WebMock by default
-WebMock.disable_net_connect!(allow_localhost: true)
-
-# Shoulda Matchers configuration
-Shoulda::Matchers.configure do |config|
-  config.integrate do |with|
-    with.test_framework :rspec
-    with.library :rails
-  end
+  # Include route helpers for request specs
+  config.include Mobbie::Rails::Engine.routes.url_helpers, type: :request
 end

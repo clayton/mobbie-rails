@@ -1,4 +1,6 @@
 require 'rails/engine'
+require 'jwt'
+require 'bcrypt'
 
 module Mobbie
   module Rails

@@ -50,7 +50,7 @@ module Mobbie
             return render_error('missing_expiry', 'Subscription must have expiry date', :bad_request)
           end
 
-          Rails.logger.info "Processing subscription for user #{current_user.id} with transaction data: #{transaction_data.inspect}"
+          ::Rails.logger.info "Processing subscription for user #{current_user.id} with transaction data: #{transaction_data.inspect}"
           
           ActiveRecord::Base.transaction do
             # First check if subscription exists for current user
@@ -66,7 +66,7 @@ module Mobbie
               )
               
               if existing_subscription
-                Rails.logger.info "Found subscription for different user (#{existing_subscription.user_id}), transferring to current user (#{current_user.id}) based on Apple validation"
+                ::Rails.logger.info "Found subscription for different user (#{existing_subscription.user_id}), transferring to current user (#{current_user.id}) based on Apple validation"
                 # Transfer the subscription to current user since Apple validated ownership
                 existing_subscription.update!(
                   user_id: current_user.id,
@@ -102,7 +102,7 @@ module Mobbie
             end
 
             # Log the subscription details for debugging
-            Rails.logger.info "Subscription created/updated: #{subscription.inspect}"
+            ::Rails.logger.info "Subscription created/updated: #{subscription.inspect}"
             
             # Return response with consistent formatting
             response_json = {
@@ -119,7 +119,7 @@ module Mobbie
               message: 'Subscription activated successfully'
             }
             
-            Rails.logger.info "Sending subscription response: #{response_json.to_json}"
+            ::Rails.logger.info "Sending subscription response: #{response_json.to_json}"
             render json: response_json
           end
 

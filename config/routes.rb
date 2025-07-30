@@ -6,6 +6,7 @@ Mobbie::Rails::Engine.routes.draw do
     
     # User routes
     patch 'users/link_apple_account', to: 'users#link_apple_account'
+    get 'user/subscription_status', to: 'users#subscription_status'
     
     # Paywall configuration
     get 'paywall_config', to: 'paywall_config#show'
@@ -17,8 +18,12 @@ Mobbie::Rails::Engine.routes.draw do
         get 'current'
       end
     end
+    resources :subscription_plans, only: [:index]
     
     # Support tickets
     resources :support_requests, only: [:create]
+    
+    # Smart restore
+    post 'smart_restore', to: 'smart_restore#create'
   end
 end

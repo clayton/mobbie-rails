@@ -80,10 +80,13 @@ module Mobbie
     end
     
     def as_json(options = {})
-      super(options.merge(
-        only: [:id, :email, :username, :device_id, :created_at, :is_anonymous, :oauth_provider, :oauth_uid, :name],
+      hash = super(options.merge(
+        only: [:email, :username, :device_id, :created_at, :is_anonymous, :oauth_provider, :oauth_uid, :name],
         methods: [:permissions]
       ))
+      # iOS expects id as string
+      hash['id'] = id.to_s
+      hash
     end
     
     private

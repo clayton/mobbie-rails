@@ -14,7 +14,7 @@ module Mobbie
           token: token,
           user: user.as_json,
           permissions: user.permissions,
-          expires_at: expires_at.iso8601
+          expires_at: expires_at.iso8601(3) # iOS expects fractional seconds
         }
       end
       
@@ -29,7 +29,7 @@ module Mobbie
           token: token,
           user: current_user.as_json,
           permissions: current_user.permissions,
-          expires_at: expires_at.iso8601
+          expires_at: expires_at.iso8601(3) # iOS expects fractional seconds
         }
       end
       

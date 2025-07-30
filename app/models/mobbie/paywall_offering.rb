@@ -19,11 +19,14 @@ module Mobbie
     scope :ordered, -> { order(:display_order, :id) }
     
     def as_json(options = {})
-      super(options.merge(
+      hash = super(options.merge(
         only: [:product_id, :display_name, :description, :cartoon_count, 
                :is_welcome_offer, :is_featured, :display_order, :badge_text,
                :is_visible, :is_visible_for_onboarding]
       ))
+      # iOS expects cartoon_count as integer, not nil
+      hash['cartoon_count'] ||= 0
+      hash
     end
     
     # Alias for compatibility

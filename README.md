@@ -41,7 +41,7 @@ rails generate mobbie:install
 This will:
 - Create all necessary migrations
 - Add an initializer for configuration
-- Mount the engine routes at `/api`
+- Mount the engine routes at `/` (which provides `/api/*` endpoints)
 
 ### 2. Configure JWT secret (Optional)
 
@@ -74,7 +74,7 @@ rails generate mobbie:sample_data
 
 ## API Endpoints
 
-All endpoints are mounted under `/api` by default.
+All endpoints are available under `/api` when the engine is mounted at `/`.
 
 ### Authentication
 

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mobbie-rails (0.2.4)
+    mobbie-rails (0.2.5)
       bcrypt (~> 3.1)
       jwt (~> 2.7)
       rails (>= 7.1, < 9)
@@ -108,10 +108,6 @@ GEM
       ruby-openai (>= 7.0, < 9.0)
       thor (~> 1.3)
       zeitwerk (~> 2.6)
-    combustion (1.5.0)
-      activesupport (>= 3.0.0)
-      railties (>= 3.0.0)
-      thor (>= 0.14.6)
     concurrent-ruby (1.3.5)
     connection_pool (2.5.3)
     console (1.33.0)
@@ -403,7 +399,6 @@ PLATFORMS
 
 DEPENDENCIES
   claude-on-rails (~> 0.2.0)
-  combustion (~> 1.3)
   database_cleaner-active_record
   factory_bot_rails
   faker

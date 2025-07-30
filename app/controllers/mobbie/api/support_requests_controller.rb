@@ -1,8 +1,6 @@
 module Mobbie
   module Api
     class SupportRequestsController < Mobbie::ApplicationController
-      skip_before_action :authenticate_user!, only: [:create]
-      
       def create
         support_ticket = build_support_ticket
         support_ticket.save!
@@ -16,7 +14,7 @@ module Mobbie
       
       def build_support_ticket
         ticket = Mobbie::SupportTicket.new(support_ticket_params)
-        ticket.user = current_user if current_user
+        ticket.user = current_user
         ticket
       end
       
