@@ -3,7 +3,7 @@ module Mobbie
     self.table_name = "mobbie_support_tickets"
     
     # Associations
-    belongs_to :user, class_name: "Mobbie::User", optional: true
+    belongs_to_mobbie_user :user, optional: true
     
     # Validations
     validates :name, presence: true

@@ -29,7 +29,7 @@ module Mobbie
           algorithm: 'HS256'
         ).first
         
-        Mobbie::User.find_by(id: payload['user_id'])
+        user_model.find_by(id: payload['user_id'])
       rescue JWT::ExpiredSignature
         nil
       rescue JWT::DecodeError
@@ -82,6 +82,10 @@ module Mobbie
     
     def set_default_headers
       response.headers['Content-Type'] = 'application/json'
+    end
+    
+    def user_model
+      Mobbie::Rails.user_model
     end
   end
 end

@@ -11,6 +11,7 @@ A mountable Rails engine that provides all the backend APIs, models, and control
 - 💰 **Credit System** - Manage user credits for consumable purchases
 - 🔄 **Smart Restore** - Restore previous purchases from Apple
 - 🚀 **Easy Setup** - Rails generators for quick installation and configuration
+- 👤 **Flexible User Integration** - Use Mobbie's User model or integrate with your existing User model (v0.4.0+)
 
 ## Requirements
 
@@ -36,14 +37,48 @@ bundle install
 
 ### 1. Run the installation generator
 
+You have two options for installation:
+
+#### Option A: Use Mobbie's built-in User model (Default)
 ```bash
 rails generate mobbie:install
+```
+
+#### Option B: Use your existing User model
+```bash
+rails generate mobbie:install --use-existing-user-model
 ```
 
 This will:
 - Create all necessary migrations
 - Add an initializer for configuration
 - Mount the engine routes at `/` (which provides `/api/*` endpoints)
+
+### For existing User model integration (Option B)
+
+If you chose to use your existing User model, you'll need to:
+
+1. Add the Mobbie concern to your User model:
+```ruby
+class User < ApplicationRecord
+  include Mobbie::ActsAsMobbieUser
+  
+  # Your existing user logic...
+end
+```
+
+2. Run the migrations to add Mobbie fields to your users table:
+```bash
+rails db:migrate
+```
+
+The migration will add these fields to your users table (all prefixed with `mobbie_` to avoid conflicts):
+- `mobbie_device_id` - For anonymous device identification
+- `mobbie_is_anonymous` - Track if user is anonymous
+- `mobbie_oauth_provider` - OAuth provider (e.g., 'apple')
+- `mobbie_oauth_uid` - OAuth unique identifier
+- `mobbie_username` - Mobbie-specific username
+- `mobbie_credit_balance` - User's credit balance
 
 ### 2. Configure JWT secret (Optional)
 
@@ -72,6 +107,52 @@ rails db:migrate
 
 ```bash
 rails generate mobbie:sample_data
+```
+
+## Migrating Between User Model Approaches
+
+### From Mobbie::User to existing User model
+
+If you started with Mobbie::User and want to switch to using your existing User model:
+
+1. Generate the migration to add Mobbie fields to your users table:
+```bash
+rails generate mobbie:user_migration User
+```
+
+2. Update your User model:
+```ruby
+class User < ApplicationRecord
+  include Mobbie::ActsAsMobbieUser
+  # your existing code...
+end
+```
+
+3. Update the Mobbie configuration:
+```ruby
+# config/initializers/mobbie.rb
+config.user_class = 'User'
+```
+
+4. Migrate existing Mobbie users to your users table (create a custom migration):
+```ruby
+class MigrateMobbieUsersToUsers < ActiveRecord::Migration[7.1]
+  def up
+    Mobbie::User.find_each do |mobbie_user|
+      User.create!(
+        email: mobbie_user.email,
+        mobbie_device_id: mobbie_user.device_id,
+        mobbie_is_anonymous: mobbie_user.is_anonymous,
+        mobbie_oauth_provider: mobbie_user.oauth_provider,
+        mobbie_oauth_uid: mobbie_user.oauth_uid,
+        mobbie_username: mobbie_user.username,
+        mobbie_credit_balance: mobbie_user.credit_balance,
+        created_at: mobbie_user.created_at,
+        updated_at: mobbie_user.updated_at
+      )
+    end
+  end
+end
 ```
 
 ## API Documentation

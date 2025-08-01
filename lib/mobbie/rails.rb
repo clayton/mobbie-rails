@@ -23,12 +23,20 @@ module Mobbie
     # Subscription Configuration
     mattr_accessor :subscription_products
     
+    # User Model Configuration
+    mattr_accessor :user_class
+    @@user_class = 'Mobbie::User'
+    
     def self.configure
       yield self
     end
     
     def self.configuration
       self
+    end
+    
+    def self.user_model
+      user_class.constantize
     end
   end
 end

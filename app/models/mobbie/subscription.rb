@@ -2,7 +2,7 @@ module Mobbie
   class Subscription < Mobbie::ApplicationRecord
     self.table_name = "mobbie_subscriptions"
     
-    belongs_to :user, class_name: "Mobbie::User"
+    belongs_to_mobbie_user :user
     belongs_to :subscription_plan, class_name: "Mobbie::SubscriptionPlan", optional: true
 
     validates :original_transaction_id, presence: true, uniqueness: true

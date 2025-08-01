@@ -12,8 +12,8 @@ module Mobbie
         render json: {
           success: true,
           token: token,
-          user: user.as_json,
-          permissions: user.permissions,
+          user: user_json(user),
+          permissions: user_permissions(user),
           expires_at: expires_at.iso8601(3) # iOS expects fractional seconds
         }
       end
@@ -27,8 +27,8 @@ module Mobbie
         render json: {
           success: true,
           token: token,
-          user: current_user.as_json,
-          permissions: current_user.permissions,
+          user: user_json(current_user),
+          permissions: user_permissions(current_user),
           expires_at: expires_at.iso8601(3) # iOS expects fractional seconds
         }
       end
@@ -38,8 +38,28 @@ module Mobbie
       def find_or_create_anonymous_user
         device_id = params.require(:device_id)
         
-        Mobbie::User.find_or_create_by!(device_id: device_id) do |user|
-          user.is_anonymous = true
+        user_model.find_or_create_by!(mobbie_device_id: device_id) do |user|
+          user.mobbie_is_anonymous = true
+        end
+      end
+      
+      def user_model
+        Mobbie::Rails.user_model
+      end
+      
+      def user_json(user)
+        if user.respond_to?(:mobbie_as_json)
+          user.mobbie_as_json
+        else
+          user.as_json
+        end
+      end
+      
+      def user_permissions(user)
+        if user.respond_to?(:mobbie_permissions)
+          user.mobbie_permissions
+        else
+          user.permissions
         end
       end
     end

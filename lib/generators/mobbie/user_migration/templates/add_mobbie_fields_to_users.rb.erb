@@ -1,0 +1,16 @@
+class AddMobbieFieldsTo<%= name.pluralize %> < ActiveRecord::Migration<%= migration_version %>
+  def change
+    add_column :<%= table_name %>, :mobbie_device_id, :string
+    add_column :<%= table_name %>, :mobbie_is_anonymous, :boolean, default: true
+    add_column :<%= table_name %>, :mobbie_oauth_provider, :string
+    add_column :<%= table_name %>, :mobbie_oauth_uid, :string
+    add_column :<%= table_name %>, :mobbie_username, :string
+    add_column :<%= table_name %>, :mobbie_credit_balance, :integer, default: 0
+    
+    # Add indexes for performance
+    add_index :<%= table_name %>, :mobbie_device_id, unique: true
+    add_index :<%= table_name %>, [:mobbie_oauth_provider, :mobbie_oauth_uid], unique: true, name: 'index_<%= table_name %>_on_mobbie_oauth'
+    add_index :<%= table_name %>, :mobbie_username, unique: true
+    add_index :<%= table_name %>, :mobbie_is_anonymous
+  end
+end

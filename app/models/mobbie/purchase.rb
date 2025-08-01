@@ -2,7 +2,7 @@ module Mobbie
   class Purchase < Mobbie::ApplicationRecord
     self.table_name = "mobbie_purchases"
     
-    belongs_to :user, class_name: "Mobbie::User"
+    belongs_to_mobbie_user :user
 
     validates :original_transaction_id, presence: true, uniqueness: true
     validates :transaction_id, presence: true
