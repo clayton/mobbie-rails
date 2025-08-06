@@ -20,11 +20,9 @@ module Mobbie
       config.mobbie.jwt_expiration = 24.hours
       config.mobbie.jwt_refresh_expiration = 30.days
       
-      initializer "mobbie.configure_rails_settings" do
-        ActiveSupport.on_load(:action_controller) do
-          include Mobbie::JwtAuthenticatable
-        end
-      end
+      # Don't auto-include authentication in all controllers
+      # This was causing authentication to be required for all routes, including health checks
+      # The Mobbie controllers will include this concern themselves
       
       initializer "mobbie.configure_jwt_secret", after: :load_config_initializers do
         # Set JWT secret key with proper fallback chain
