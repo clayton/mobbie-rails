@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe Mobbie::Api::PurchasesController, type: :controller do
   include AppleIapTestHelper
   
+  routes { Mobbie::Rails::Engine.routes }
+  
   let(:user) { create(:mobbie_user, credit_balance: 50) }
   let(:valid_product_id) { 'credit_pack_medium' }
   let(:valid_jws_token) { generate_mock_jws_token(product_id: valid_product_id) }
@@ -24,6 +26,8 @@ RSpec.describe Mobbie::Api::PurchasesController, type: :controller do
             product_id: valid_product_id,
             jws_token: valid_jws_token
           }
+          puts "Response status: #{response.status}"
+          puts "Response body: #{response.body}"
         }.to change { user.purchases.count }.by(1)
         
         expect(response).to have_http_status(:success)

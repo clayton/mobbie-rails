@@ -7,15 +7,28 @@ module Mobbie
       before_action :authenticate_user!
     end
     
+    protected
+    
+    def current_user
+      @current_user ||= decode_jwt_user
+    end
+    
+    def user_signed_in?
+      current_user.present?
+    end
+    
     private
     
     def authenticate_user!
       return if current_user
-      render_unauthorized("Authentication required")
-    end
-    
-    def current_user
-      @current_user ||= decode_jwt_user
+      
+      if jwt_token.nil? && request.headers['Authorization'].nil?
+        error_message = "Missing authentication token"
+      else
+        error_message = @jwt_error || "Authentication required"
+      end
+      
+      render_unauthorized(error_message)
     end
     
     def decode_jwt_user
@@ -31,8 +44,10 @@ module Mobbie
         
         user_model.find_by(id: payload['user_id'])
       rescue JWT::ExpiredSignature
+        @jwt_error = "token has expired"
         nil
       rescue JWT::DecodeError
+        @jwt_error = "invalid token"
         nil
       end
     end

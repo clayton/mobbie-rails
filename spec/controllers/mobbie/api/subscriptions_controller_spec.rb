@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe Mobbie::Api::SubscriptionsController, type: :controller do
   include AppleIapTestHelper
   
+  routes { Mobbie::Rails::Engine.routes }
+  
   let(:user) { create(:mobbie_user) }
   let(:valid_product_id) { 'com.mobbie.premium.weekly' }
   let(:valid_jws_token) { generate_mock_jws_token }
@@ -171,7 +173,9 @@ RSpec.describe Mobbie::Api::SubscriptionsController, type: :controller do
     context 'when environment mismatch' do
       before do
         mock_apple_validation_success
-        mock_apple_production_environment(false) # Will fail in our mock
+        # Mock environment validation to fail for this test
+        allow(Mobbie::AppleIapService).to receive(:validate_production_environment?)
+          .and_return(false)
         allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('production'))
       end
 

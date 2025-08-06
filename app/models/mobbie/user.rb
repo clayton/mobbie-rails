@@ -2,13 +2,13 @@ module Mobbie
   class User < Mobbie::ApplicationRecord
     self.table_name = "mobbie_users"
     
-    # Map old field names to new prefixed names for backward compatibility
-    alias_attribute :device_id, :mobbie_device_id
-    alias_attribute :is_anonymous, :mobbie_is_anonymous
-    alias_attribute :oauth_provider, :mobbie_oauth_provider
-    alias_attribute :oauth_uid, :mobbie_oauth_uid
-    alias_attribute :username, :mobbie_username
-    alias_attribute :credit_balance, :mobbie_credit_balance
+    # Map prefixed field names to actual database columns
+    alias_attribute :mobbie_device_id, :device_id
+    alias_attribute :mobbie_is_anonymous, :is_anonymous
+    alias_attribute :mobbie_oauth_provider, :oauth_provider
+    alias_attribute :mobbie_oauth_uid, :oauth_uid
+    alias_attribute :mobbie_username, :username
+    alias_attribute :mobbie_credit_balance, :credit_balance
     
     # Include the shared functionality
     include Mobbie::ActsAsMobbieUser
