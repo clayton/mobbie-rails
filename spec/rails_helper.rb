@@ -13,6 +13,7 @@ require 'rspec/rails'
 require 'factory_bot_rails'
 require 'faker'
 require 'webmock/rspec'
+require 'shoulda-matchers'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories.
@@ -47,4 +48,12 @@ RSpec.configure do |config|
 
   # Include route helpers for request specs
   config.include Mobbie::Rails::Engine.routes.url_helpers, type: :request
+end
+
+# Configure Shoulda Matchers
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
 end
