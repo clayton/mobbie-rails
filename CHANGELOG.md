@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+## [0.5.3] - 2025-08-09
+
+### Fixed
+- API response now returns user ID as integer instead of string to match iOS client expectations
+- Fixes JSON decoding errors in Mobbie iOS SDK when authenticating
+
 ## [0.4.0] - 2025-08-01
 
 ### Added
